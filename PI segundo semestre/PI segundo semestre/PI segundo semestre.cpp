@@ -5,6 +5,8 @@
 #include <allegro5/allegro_ttf.h> // contes TrueType
 #include <allegro5/allegro_image.h> //addon para colocar imagens
 
+
+
 int main() {
     ALLEGRO_DISPLAY* janelaJogo = NULL; // criação da variável de display
 
@@ -26,6 +28,7 @@ int main() {
 
     al_init_font_addon();  // inicializa o sistema de fontes
     al_init_ttf_addon();   // inicializa o suporte para fontes TTF
+    al_install_mouse();
 
     janelaJogo = al_create_display(800, 600); //criação da janela do jogo
     al_set_window_position(janelaJogo, 400, 200); //posição da janela na tela
@@ -48,6 +51,23 @@ int main() {
     al_register_event_source(event_queue, al_get_display_event_source(janelaJogo));
     al_register_event_source(event_queue, al_get_mouse_event_source());
 
+
+
+
+
+
+
+
+
+
+
+    int objetoX = 450;
+    int objetoY = 300;
+    int objetoAlt = 50;
+    int objetoLarg = 50;
+    bool arrastando = false;
+
+
     // controle do loop
     bool done = false;
 
@@ -60,12 +80,49 @@ int main() {
             done = true;
         }
 
+        if (ALLEGRO_EVENT_MOUSE_BUTTON_DOWN == 1) {
+            if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+                break;
+            }
+            else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
+            {
+                if (ev.mouse.button == 1)
+                {
+                    if (ev.mouse.x >= objetoX && ev.mouse.x <= objetoX + objetoLarg &&
+                        ev.mouse.y >= objetoY && ev.mouse.y <= objetoY + objetoAlt) {
+                        arrastando = true;
+                    }
+                }
+            }
+            else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP) {
+                if (ev.mouse.button == 1) {
+                    arrastando = false;
+                }
+            }
+            else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES) {
+                if (arrastando) {
+                    objetoX = ev.mouse.x;
+                    objetoY = ev.mouse.y;
+                }
+            }
+        }
+
+      
+
+
+        al_draw_filled_rectangle(objetoX, objetoY, objetoX + objetoLarg, objetoY + objetoAlt, al_map_rgb(0, 0, 255));
+
         // limpa a tela
         al_clear_to_color(al_map_rgb(0, 0, 0));
 
+              
+        
+        e
+
         // desenha o texto na tela
-        al_draw_text(font, al_map_rgb(255, 255, 255), 800 / 2, 500 - 100,
-            ALLEGRO_ALIGN_CENTER, "Lorem ipsum dolor sit amet. Eos nisi rerum est facilis cupiditate a illo voluptatem et");
+       //al_draw_text(font, al_map_rgb(255, 255, 255), 800 / 2, 500 - 100,
+            //ALLEGRO_ALIGN_CENTER, "oi");
+
 
         // atualiza o display
         al_flip_display();
